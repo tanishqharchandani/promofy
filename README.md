@@ -1,1 +1,1 @@
-# promofy
+# promofy_admin

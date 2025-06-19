@@ -1,0 +1,69 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-2xl font-semibold">📨 Inquiries</h2>
+</div>
+
+<!-- Filters -->
+<form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <input
+    type="text"
+    name="search"
+    value="{{ search_query }}"
+    placeholder="🔍 Search by ad title, buyer name..."
+    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
+  />
+
+  <select name="sort" class="w-full px-4 py-2 border border-gray-300 rounded">
+    <option value="">Sort By</option>
+    <option value="created_at" {% if current_sort == 'created_at' %}selected{% endif %}>Created At</option>
+    <option value="buyer_name" {% if current_sort == 'buyer_name' %}selected{% endif %}>Buyer Name</option>
+  </select>
+
+  <div class="col-span-full">
+    <button type="submit" class="px-6 py-2 bg-primary text-white rounded hover:bg-blue-700 transition">
+      Apply Filters
+    </button>
+  </div>
+</form>
+
+<!-- Table -->
+<div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700">
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+    <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300">
+      <tr>
+        <th class="px-4 py-3 text-left font-medium">Ad Title</th>
+        <th class="px-4 py-3 text-left font-medium">Buyer</th>
+        <th class="px-4 py-3 text-left font-medium">Phone</th>
+        <th class="px-4 py-3 text-left font-medium">Message</th>
+        <th class="px-4 py-3 text-left font-medium">Seller</th>
+        <th class="px-4 py-3 text-left font-medium">Created</th>
+        <th class="px-4 py-3 text-left font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+      {% for inquiry in inquiries %}
+      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+        <td class="px-4 py-3">{{ inquiry.ad_title }}</td>
+        <td class="px-4 py-3">{{ inquiry.buyer_name }}</td>
+        <td class="px-4 py-3">{{ inquiry.buyer_phone }}</td>
+        <td class="px-4 py-3">{{ inquiry.message }}</td>
+        <td class="px-4 py-3">{{ inquiry.seller_name }}</td>
+        <td class="px-4 py-3">{{ inquiry.created_at }}</td>
+        <td class="px-4 py-3">
+          <form action="{% url 'delete_inquiry' inquiry.id %}" method="post" onsubmit="return confirm('Delete this inquiry?');">
+            {% csrf_token %}
+            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="px-4 py-6 text-center text-gray-500">No inquiries found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

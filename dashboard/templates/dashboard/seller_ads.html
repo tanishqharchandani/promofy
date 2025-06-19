@@ -1,0 +1,75 @@
+{% extends 'dashboard/base.html' %} {% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-2xl font-semibold">📢 Ads for Seller: {{ seller_name }}</h2>
+</div>
+
+<!-- Existing ads table -->
+<div
+  class="overflow-x-auto bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700"
+>
+  <table
+    class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm"
+  >
+    <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300">
+      <tr>
+        <th class="px-4 py-3 text-left font-medium">Title</th>
+        <th class="px-4 py-3 text-left font-medium">Category</th>
+        <th class="px-4 py-3 text-left font-medium">Price</th>
+        <th class="px-4 py-3 text-left font-medium">cover image</th>
+        <th class="px-4 py-3 text-left font-medium">Featured</th>
+        <th class="px-4 py-3 text-left font-medium">Active</th>
+        <th class="px-4 py-3 text-left font-medium">Created</th>
+        <th class="px-4 py-3 text-left font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+      {% for ad in ads %}
+      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+        <td class="px-4 py-3">{{ ad.title }}</td>
+        <td class="px-4 py-3">{{ ad.category }}</td>
+        <td class="px-4 py-3 text-green-600">${{ ad.price }}</td>
+        <td class="px-4 py-3">
+          {% if ad.cover_image %}
+          <a
+            href="{{ ad.cover_image }}"
+            class="text-blue-500 hover:underline"
+            target="_blank"
+            >View</a
+          >
+          {% else %}
+          <span class="text-gray-400">N/A</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3">{{ ad.is_featured|yesno:"✅,❌" }}</td>
+        <td class="px-4 py-3">{{ ad.is_active|yesno:"✅,❌" }}</td>
+        <td class="px-4 py-3">{{ ad.created_at }}</td>
+
+        <td class="px-4 py-3 flex gap-2 flex-wrap">
+          <a
+            href="{% url 'edit_ad' ad.id %}"
+            class="text-blue-600 hover:underline"
+            >Edit</a
+          >
+          <form
+            action="{% url 'delete_ad' ad.id %}"
+            method="post"
+            onsubmit="return confirm('Delete this ad?');"
+          >
+            {% csrf_token %}
+            <button type="submit" class="text-red-600 hover:underline">
+              Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="px-4 py-6 text-center text-gray-500">
+          No ads found for this seller.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

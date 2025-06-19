@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<h2 class="text-2xl font-semibold mb-6">👀 View Seller</h2>
+
+<div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow max-w-2xl space-y-4 border border-gray-200 dark:border-gray-700">
+  <div>
+    <label class="font-medium">Name:</label>
+    <input type="text" value="{{ seller.name }}" disabled class="w-full px-4 py-2 border rounded bg-gray-100 dark:bg-gray-700">
+  </div>
+  
+  <div>
+    <label class="font-medium">Email:</label>
+    <input type="text" value="{{ seller.email }}" disabled class="w-full px-4 py-2 border rounded bg-gray-100 dark:bg-gray-700">
+  </div>
+
+  <div>
+    <label class="font-medium">Phone Number:</label>
+    <input type="text" value="{{ seller.phone_number }}" disabled class="w-full px-4 py-2 border rounded bg-gray-100 dark:bg-gray-700">
+  </div>
+
+  <div>
+    <label class="font-medium">Active:</label>
+    <input type="text" value="{{ seller.is_active|yesno:'Yes,No' }}" disabled class="w-full px-4 py-2 border rounded bg-gray-100 dark:bg-gray-700">
+  </div>
+
+  <div>
+    <label class="font-medium">Verified:</label>
+    <input type="text" value="{{ seller.is_verified|yesno:'Yes,No' }}" disabled class="w-full px-4 py-2 border rounded bg-gray-100 dark:bg-gray-700">
+  </div>
+
+  <div>
+    <label class="font-medium">Location (Lat, Lng):</label>
+    <input type="text" value="{{ seller.location.lat }}, {{ seller.location.lng }}" disabled class="w-full px-4 py-2 border rounded bg-gray-100 dark:bg-gray-700">
+  </div>
+
+  <div>
+    <label class="font-medium block mb-1">Profile Image:</label>
+    <img src="{{ seller.profile_image }}" alt="Profile" class="w-32 h-32 rounded object-cover border">
+  </div>
+
+  <div>
+    <label class="font-medium block mb-1">Portfolio Images:</label>
+    <div class="flex flex-wrap gap-4">
+      {% for img in seller.portfolio_images %}
+      <img src="{{ img }}" alt="Portfolio" class="w-24 h-24 rounded border object-cover">
+      {% endfor %}
+    </div>
+  </div>
+
+  <a href="{% url 'sellers' %}" class="inline-block mt-4 text-sm text-blue-600 hover:underline">← Back to Sellers</a>
+</div>
+{% endblock %}

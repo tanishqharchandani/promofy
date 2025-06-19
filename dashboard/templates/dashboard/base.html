@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Promofy Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3b82f6",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="h-full text-gray-800 dark:text-gray-200 dark:bg-gray-900">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white dark:bg-gray-800 shadow-lg flex flex-col">
+        <div
+          class="h-16 flex items-center justify-center text-xl font-semibold border-b border-gray-200 dark:border-gray-700"
+        >
+          <span class="text-primary">Promofy Admin</span>
+        </div>
+        <nav class="flex-grow px-4 py-6 space-y-2 text-sm">
+          <a
+            href="{% url 'buyers' %}"
+            class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            >🧑‍💼 <span>Buyers</span></a
+          >
+          <a
+            href="{% url 'sellers' %}"
+            class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            >🏪 <span>Sellers</span></a
+          >
+          <a
+            href="{% url 'listings' %}"
+            class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            >🪧 <span>Listings</span></a
+          >
+          <a
+            href="{% url 'categories' %}"
+            class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            >🗂️ <span>Categories</span></a
+          >
+          <a
+            href="{% url 'ads' %}"
+            class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            >📢 <span>Ads</span></a
+          >
+          <a
+            href="{% url 'inquiries' %}"
+            class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            📨 <span>Inquiries</span>
+          </a>
+        </nav>
+        <div
+          class="px-4 py-4 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400"
+        >
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="text-red-500 hover:underline">
+              🚪 Logout
+            </button>
+          </form>
+          <div class="mt-2">&copy; 2025 Promofy. All rights reserved.</div>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <header
+          class="h-16 flex items-center justify-between px-6 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+        >
+          <h1 class="text-lg font-medium">Admin Panel</h1>
+          <div class="flex items-center gap-3">
+            <button
+              onclick="document.documentElement.classList.toggle('dark')"
+              title="Toggle dark mode"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            >
+              🌓
+            </button>
+            <div
+              class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold"
+            >
+              A
+            </div>
+          </div>
+        </header>
+
+        <!-- Page content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900">
+          <div class="max-w-7xl mx-auto">{% block content %}{% endblock %}</div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

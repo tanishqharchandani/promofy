@@ -1,0 +1,99 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-2xl font-semibold">📦 Listings</h2>
+</div>
+
+<!-- Filters -->
+<form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <input
+    type="text"
+    name="search"
+    value="{{ search_query }}"
+    placeholder="🔍 Search listings..."
+    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
+  />
+
+  <select name="category" class="w-full px-4 py-2 border border-gray-300 rounded">
+    <option value="">All Categories</option>
+    <option value="Billboard" {% if current_category == 'Billboard' %}selected{% endif %}>Billboard</option>
+    <option value="Banner" {% if current_category == 'Banner' %}selected{% endif %}>Banner</option>
+    <option value="Transit" {% if current_category == 'Transit' %}selected{% endif %}>Transit</option>
+  </select>
+
+  <select name="featured" class="w-full px-4 py-2 border border-gray-300 rounded">
+    <option value="">All</option>
+    <option value="true" {% if current_featured == 'true' %}selected{% endif %}>Featured</option>
+    <option value="false" {% if current_featured == 'false' %}selected{% endif %}>Not Featured</option>
+  </select>
+
+  <select name="sort" class="w-full px-4 py-2 border border-gray-300 rounded">
+    <option value="">Sort By</option>
+    <option value="title" {% if current_sort == 'title' %}selected{% endif %}>Title</option>
+    <option value="price" {% if current_sort == 'price' %}selected{% endif %}>Price</option>
+    <option value="created_at" {% if current_sort == 'created_at' %}selected{% endif %}>Created At</option>
+  </select>
+
+  <div class="col-span-full">
+    <button type="submit" class="px-6 py-2 bg-primary text-white rounded hover:bg-blue-700 transition">
+      Apply Filters
+    </button>
+  </div>
+</form>
+
+<!-- Table -->
+<div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700">
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+    <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300">
+      <tr>
+        <th class="px-4 py-3 text-left font-medium">Title</th>
+        <th class="px-4 py-3 text-left font-medium">Category</th>
+        <th class="px-4 py-3 text-left font-medium">Price</th>
+        <th class="px-4 py-3 text-left font-medium">Location</th>
+        <th class="px-4 py-3 text-left font-medium">Featured</th>
+        <th class="px-4 py-3 text-left font-medium">Created</th>
+        <th class="px-4 py-3 text-left font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+      {% for listing in listings %}
+      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+        <td class="px-4 py-3">{{ listing.title }}</td>
+        <td class="px-4 py-3">{{ listing.category }}</td>
+        <td class="px-4 py-3">${{ listing.price }}</td>
+        <td class="px-4 py-3">{{ listing.location }}</td>
+        <td class="px-4 py-3">
+          {% if listing.is_featured %}
+            <span class="text-green-600 font-medium">Yes</span>
+          {% else %}
+            <span class="text-gray-500">No</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3">{{ listing.created_at }}</td>
+        <td class="px-4 py-3 flex gap-2 flex-wrap">
+          <a href="{% url 'edit_listing' listing.id %}" class="text-blue-600 hover:underline">Edit</a>
+
+          <form action="{% url 'toggle_featured' listing.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="current_status" value="{{ listing.is_featured }}">
+            <button type="submit" class="text-yellow-600 hover:underline">
+              {% if listing.is_featured %}Unfeature{% else %}Feature{% endif %}
+            </button>
+          </form>
+
+          <form action="{% url 'delete_listing' listing.id %}" method="post" onsubmit="return confirm('Are you sure?');">
+            {% csrf_token %}
+            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-center text-gray-500 px-4 py-6">No listings found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
